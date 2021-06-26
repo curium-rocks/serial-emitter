@@ -1,17 +1,13 @@
 import { describe, it} from 'mocha';
 import { expect } from 'chai';
-import { SerialDataFormat, SerialEmitterFactory, SerialParity, SerialPortSettings } from '../src/serialEmitterFactory';
-import SerialPort from 'serialport';
-import { SerialEmitter } from '../src/serialEmitter';
 import * as TypeMoq from "typemoq";
-
+import { SerialDataFormat, SerialEmitterFactory, SerialParity } from '../src/serialEmitterFactory';
+import * as SerialPort from 'serialport';
+import { SerialEmitter } from '../src/serialEmitter';
 
 const mockSerialPort = TypeMoq.Mock.ofType<SerialPort>();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-SerialEmitterFactory.setProvider((settings:SerialPortSettings) : Promise<SerialPort> => {
-    return Promise.resolve(mockSerialPort.object);
-})
+SerialEmitterFactory.setProvider((() => Promise.resolve(mockSerialPort.target)))
 
 describe( 'serialEmitterFactory', function() {
     describe( 'getTransform()', function() {
@@ -22,8 +18,8 @@ describe( 'serialEmitterFactory', function() {
         });
     });
     describe('build()', function() {
-        it('Should return a serial emitter', async function() {
-            const emitter = await SerialEmitterFactory.build({
+        it('Should return a serial emitter',async function() {
+             const emitter = await SerialEmitterFactory.build({
                 portName: '/dev/ttys003',
                 baudRate: 9600,
                 dataBits: 8,
