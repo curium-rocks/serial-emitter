@@ -3,11 +3,39 @@ import SerialPort from "serialport";
 import { Transform } from "stream";
 import { SerialEmitter } from "./serialEmitter";
 
+
+export interface SerialPortProvider {
+    (settings:SerialPortSettings): Promise<SerialPort>;
+}
+
+const defaultSerialPortProvider = (settings:SerialPortSettings) : Promise<SerialPort> => {
+    return new Promise( (resolve, reject) => {
+        const serialPort = new SerialPort(settings.portName, {
+            dataBits: settings.dataBits,
+            parity: 'none',
+            baudRate: settings.baudRate,
+        }, (err) => {
+            if(err) reject(err);
+            resolve(serialPort);
+        });
+    });
+}
+
 /**
  * Factory to create
  */
 export class SerialEmitterFactory {
-    
+
+    private static provider:SerialPortProvider = defaultSerialPortProvider;
+
+    /**
+     * Override the default serial port provider as needed
+     * @param {SerialDataProvider} serialPortProvider 
+     */
+    static setProvider(serialPortProvider:SerialPortProvider) : void {
+        SerialEmitterFactory.provider = serialPortProvider;
+    }
+
     /**
      * Build a data emitter from the provided serial settings
      * @param {SerialPortSettings} settings 
@@ -16,19 +44,12 @@ export class SerialEmitterFactory {
      * @param {string} desc 
      * @return {IDataEmitter} 
      */
-    static buildEmitter(settings:SerialPortSettings, id: string, name: string, desc: string): Promise<IDataEmitter> {
-        return new Promise( (resolve, reject) => {
-            const serialPort = new SerialPort(settings.portName, {
-                dataBits: settings.dataBits,
-                parity: 'none',
-                baudRate: settings.baudRate,
-            }, (err) => {
-                if(err) reject(err);
-                resolve(new SerialEmitter(
-                    serialPort, 
-                    SerialEmitterFactory.getTransform(settings.format), id, name, desc));
-            });
-        });
+    static build(settings:SerialPortSettings, id: string, name: string, desc: string): Promise<IDataEmitter> {
+        return SerialEmitterFactory.provider(settings).then((sp)=>{
+            return(new SerialEmitter(
+                sp, 
+                SerialEmitterFactory.getTransform(settings.format), id, name, desc));
+        })
     }
 
     /**
