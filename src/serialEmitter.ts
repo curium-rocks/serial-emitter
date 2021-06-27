@@ -16,7 +16,7 @@ export class SerialEmitter extends  BaseEmitter {
      * @param {string} name 
      * @param {string} desc 
      */
-    constructor(private serialPort: SerialPort,  private transform:Transform , id:string, name:string, desc:string) {
+    constructor(private serialPort: SerialPort,  private transform:Transform, id:string, name:string, desc:string) {
         super(id, name, desc);
         this.transform.on('data', (chunk) => {
             this.connected();
