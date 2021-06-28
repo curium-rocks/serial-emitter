@@ -28,22 +28,6 @@ export class SerialEmitter extends  BaseEmitter {
 
     /**
      * 
-     * @param {ISettings} settings serial settings etc 
-     * @return {Promise<IExecutionResult>} 
-     */
-    applySettings(settings: ISettings & ITraceableAction): Promise<IExecutionResult> {
-        // move up to base, perhaps setup pattern for allowing override or virtualizing
-        // need to stop duplicate code
-        this.setName(settings.name);
-        this.setCommLink(settings.commLink);
-        this.setId(settings.id);
-        // move out to settings in base
-        this.setDCCheckInterval(15000, 12000);
-        return Promise.reject(new Error('Method not implemented'));
-    }
-
-    /**
-     * 
      * @param {ICommand} command 
      * @return {Promise<IExecutionResult>}
      */
