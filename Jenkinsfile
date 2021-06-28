@@ -90,7 +90,7 @@ pipeline {
        mattermostSend color: "good", message: "[Serial-Emitter] Build Success - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
     always {
-       archiveArtifacts artifacts: 'build/**/*,coverage/**/*', fingerprint: true
-    }
+       archiveArtifacts artifacts: 'build/**/*,coverage/**/*,docs/**/*', fingerprint: true
+    },
   }
 }
