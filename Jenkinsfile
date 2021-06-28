@@ -91,6 +91,6 @@ pipeline {
     }
     always {
        archiveArtifacts artifacts: 'build/**/*,coverage/**/*,docs/**/*', fingerprint: true
-    },
+    }
   }
 }
