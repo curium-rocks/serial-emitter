@@ -1,4 +1,4 @@
-import {BaseEmitter, ICommand, IDataEvent, IExecutionResult, ISettings, ITraceableAction} from '@curium.rocks/data-emitter-base';
+import {BaseEmitter, ICommand, IDataEvent, IExecutionResult} from '@curium.rocks/data-emitter-base';
 import { IStatusEvent } from '@curium.rocks/data-emitter-base/build/src/dataEmitter';
 import SerialPort from 'serialport';
 import {Transform} from 'serialport';

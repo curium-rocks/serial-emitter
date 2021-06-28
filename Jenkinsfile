@@ -27,6 +27,7 @@ pipeline {
                 // check for vulnerabilities
                 sh 'npm audit --production'
                 sh 'npm run sonarscan'
+                sh 'npm run doc'
             }
         }
     }

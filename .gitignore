@@ -4,3 +4,5 @@ build
 coverage
 .idea
 .DS_Store
+coverage
+docs
