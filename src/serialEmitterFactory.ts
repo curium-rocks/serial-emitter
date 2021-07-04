@@ -26,7 +26,7 @@ const defaultSerialPortProvider = (settings:SerialPortSettings) : Promise<Serial
  */
 export class SerialEmitterFactory {
 
-    private provider:SerialPortProvider = defaultSerialPortProvider;
+    protected provider:SerialPortProvider = defaultSerialPortProvider;
 
     /**
      * Override the default serial port provider as needed
