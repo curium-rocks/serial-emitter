@@ -26,14 +26,14 @@ const defaultSerialPortProvider = (settings:SerialPortSettings) : Promise<Serial
  */
 export class SerialEmitterFactory {
 
-    private static provider:SerialPortProvider = defaultSerialPortProvider;
+    private provider:SerialPortProvider = defaultSerialPortProvider;
 
     /**
      * Override the default serial port provider as needed
      * @param {SerialDataProvider} serialPortProvider 
      */
-    static setProvider(serialPortProvider:SerialPortProvider) : void {
-        SerialEmitterFactory.provider = serialPortProvider;
+    setProvider(serialPortProvider:SerialPortProvider) : void {
+        this.provider = serialPortProvider;
     }
 
     /**
@@ -44,11 +44,11 @@ export class SerialEmitterFactory {
      * @param {string} desc 
      * @return {IDataEmitter} 
      */
-    static build(settings:SerialPortSettings, id: string, name: string, desc: string): Promise<IDataEmitter> {
-        return SerialEmitterFactory.provider(settings).then((sp)=>{
+    build(settings:SerialPortSettings, id: string, name: string, desc: string): Promise<IDataEmitter> {
+        return this.provider(settings).then((sp)=>{
             return(new SerialEmitter(
                 sp, 
-                SerialEmitterFactory.getTransform(settings.format), id, name, desc));
+                this.getTransform(settings.format), id, name, desc));
         })
     }
 
@@ -58,7 +58,7 @@ export class SerialEmitterFactory {
      * @param {SerialDataFormat} format 
      * @return {Transform}
      */
-    static getTransform(format: SerialDataFormat): Transform {
+    getTransform(format: SerialDataFormat): Transform {
         switch(format) {
             case SerialDataFormat.JSON:
                 throw new Error("Not implemented");

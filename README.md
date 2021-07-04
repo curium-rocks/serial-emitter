@@ -9,7 +9,9 @@
 import {SerialDataFormat, SerialEmitterFactory, SerialParity} from "@curium.rocks/serial-emitter";
 import {IDataEmitter, IDataEvent} from "@curium.rocks/data-emitter-base";
 
-const emitter:IDataEmitter = await SerialEmitterFactory.build({
+const factory:SerialEmitterFactory = new SerialEmitterFactory();
+
+const emitter:IDataEmitter = await factory.build({
     portName: '/dev/ttyUSB0',
     dataBits: 8,
     parity: SerialParity.NONE,
