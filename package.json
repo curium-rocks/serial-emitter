@@ -2,7 +2,7 @@
   "name": "@curium.rocks/serial-emitter",
   "version": "0.1.0",
   "description": "A IDataEmitter implementation that uses a serial source and emits raw data",
-  "main": "build/lib.js",
+  "main": "build/src/lib.js",
   "scripts": {
     "test": "nyc mocha --require ts-node/register --require source-map-support/register --recursive 'test/**/*.ts'",
     "build": "node_modules/typescript/bin/tsc --project ./",
