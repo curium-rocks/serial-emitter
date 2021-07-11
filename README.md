@@ -1,5 +1,5 @@
 # Serial-Emitter
-[![Security Rating](https://sonarqube.curium.rocks/api/project_badges/measure?project=serial-emitter&metric=security_rating)](https://sonarqube.curium.rocks/dashboard?id=serial-emitter) [![Coverage](https://sonarqube.curium.rocks/api/project_badges/measure?project=serial-emitter&metric=coverage)](https://sonarqube.curium.rocks/dashboard?id=serial-emitter) [![Quality Gate Status](https://sonarqube.curium.rocks/api/project_badges/measure?project=serial-emitter&metric=alert_status)](https://sonarqube.curium.rocks/dashboard?id=serial-emitter)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=curium-rocks_serial-emitter&metric=security_rating)](https://sonarcloud.io/dashboard?id=curium-rocks_serial-emitter) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=curium-rocks_serial-emitter&metric=coverage)](https://sonarcloud.io/dashboard?id=curium-rocks_serial-emitter) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=curium-rocks_serial-emitter&metric=alert_status)](https://sonarcloud.io/dashboard?id=curium-rocks_serial-emitter)
 
 ## How To Install
 `npm install --save @curium.rocks/serial-emitter`
