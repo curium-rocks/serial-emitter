@@ -73,4 +73,12 @@ export class SerialEmitter extends  BaseEmitter {
         return {}
     }
 
+    /**
+     * get the type of the data emitter
+     * @return {string}
+     */
+    getType(): string {
+        return "SerialEmitter";
+    }
+
 }
