@@ -1,4 +1,4 @@
-import { BaseEmitterFactory, IDataEmitter, IEmitterDescription, IEmitterFactory } from "@curium.rocks/data-emitter-base";
+import { BaseEmitterFactory, IDataEmitter, IEmitterDescription } from "@curium.rocks/data-emitter-base";
 import SerialPort from "serialport";
 import { Transform } from "stream";
 import { SerialEmitter } from "./serialEmitter";
