@@ -2,10 +2,12 @@ import {BaseEmitter, ICommand, IDataEvent, IExecutionResult} from '@curium.rocks
 import { IStatusEvent } from '@curium.rocks/data-emitter-base/build/src/dataEmitter';
 import SerialPort from 'serialport';
 import {Transform} from 'serialport';
+import { SerialPortSettings } from './serialEmitterFactory';
 /**
  * Serial emitter implementation of IDataEmitter
  */
 export class SerialEmitter extends  BaseEmitter {
+    static  TYPE = "SERIAL-EMITTER";
     private lastDataEvent?: IDataEvent;
 
     /**
@@ -16,7 +18,7 @@ export class SerialEmitter extends  BaseEmitter {
      * @param {string} name 
      * @param {string} desc 
      */
-    constructor(private serialPort: SerialPort,  private transform:Transform, id:string, name:string, desc:string) {
+    constructor(private serialPort: SerialPort,  private transform:Transform, id:string, name:string, desc:string, protected settings: SerialPortSettings) {
         super(id, name, desc);
         this.transform.on('data', (chunk) => {
             this.connected();
@@ -47,6 +49,21 @@ export class SerialEmitter extends  BaseEmitter {
         });
     }
     
+
+    /**
+     * @return {unknown}
+     */
+    getEmitterProperties(): unknown {
+        return {
+            dataBits: this.settings.dataBits,
+            parity: this.settings.parity,
+            stopBits: this.settings.stopBits,
+            format: this.settings.format,
+            baudRate: this.settings.baudRate,
+            portName: this.settings.portName
+        }
+    }
+
     /**
      * 
      * @return {Promise<IStatusEvent>} 
@@ -70,7 +87,10 @@ export class SerialEmitter extends  BaseEmitter {
      * @return {unknown}
      */
     getMetaData(): unknown {
-        return {}
+        return {
+            portName: this.settings.portName,
+            baudRate: this.settings.baudRate
+        }
     }
 
     /**
@@ -78,7 +98,7 @@ export class SerialEmitter extends  BaseEmitter {
      * @return {string}
      */
     getType(): string {
-        return "SerialEmitter";
+        return  SerialEmitter.TYPE;
     }
 
 }

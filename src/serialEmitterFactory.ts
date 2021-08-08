@@ -1,4 +1,4 @@
-import { IDataEmitter } from "@curium.rocks/data-emitter-base";
+import { BaseEmitterFactory, IDataEmitter, IEmitterDescription, IEmitterFactory } from "@curium.rocks/data-emitter-base";
 import SerialPort from "serialport";
 import { Transform } from "stream";
 import { SerialEmitter } from "./serialEmitter";
@@ -24,7 +24,7 @@ const defaultSerialPortProvider = (settings:SerialPortSettings) : Promise<Serial
 /**
  * Factory to create
  */
-export class SerialEmitterFactory {
+export class SerialEmitterFactory extends BaseEmitterFactory {
 
     protected provider:SerialPortProvider = defaultSerialPortProvider;
 
@@ -35,6 +35,44 @@ export class SerialEmitterFactory {
     setProvider(serialPortProvider:SerialPortProvider) : void {
         this.provider = serialPortProvider;
     }
+
+    /**
+     * 
+     * @param {string} reason 
+     * @return {Promise<IDataEmitter>} 
+     */
+    protected validationRejection(reason: string) : Promise<IDataEmitter> {
+        return Promise.reject(new Error(reason));
+    }
+    /**
+     * 
+     * @param {IEmitterDescription} description
+     * @return {Promise<IDataEmitter>} 
+     */
+    buildEmitter(description: IEmitterDescription): Promise<IDataEmitter> {
+        if(description.emitterProperties == null) return this.validationRejection("Missing required emitterProperties");
+        const props = description.emitterProperties as Record<string, unknown>;
+        if(props == null) return this.validationRejection("emitterProperties in invalid format");
+        if(props.dataBits == null) return this.validationRejection("Missing required dataBits property");
+        if(props.parity == null) return this.validationRejection("Missing required parity property");
+        if(props.stopBits == null) return this.validationRejection("Missing required stopBits property");
+        if(props.baudRate == null) return this.validationRejection("Missing required baudRate property");
+        if(props.portName == null) return this.validationRejection("Missing required portName property");
+        if(props.format == null) return this.validationRejection("Missing required format property");
+
+
+        const settings: SerialPortSettings = {
+            dataBits: props.dataBits as 8 | 7 | 6 | 5 | undefined,
+            parity: props.parity as SerialParity,
+            stopBits: props.stopBits as number,
+            baudRate: props.baudRate as number,
+            portName: props.portName as string,
+            format: props.format as SerialDataFormat
+        };
+
+        return this.build(settings, description.id, description.name, description.description);
+    }
+
 
     /**
      * Build a data emitter from the provided serial settings
@@ -48,7 +86,7 @@ export class SerialEmitterFactory {
         return this.provider(settings).then((sp)=>{
             return(new SerialEmitter(
                 sp, 
-                this.getTransform(settings.format), id, name, desc));
+                this.getTransform(settings.format), id, name, desc, settings));
         })
     }
 
