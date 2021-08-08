@@ -4,10 +4,20 @@ import SerialPort, {Transform} from 'serialport';
 import {SerialEmitter} from '../src/serialEmitter';
 import {expect} from 'chai';
 import {IDataEvent} from "@curium.rocks/data-emitter-base";
+import { SerialDataFormat, SerialParity, SerialPortSettings } from '../src/serialEmitterFactory';
 
 const mockSerialPort = TypeMoq.Mock.ofType<SerialPort>(SerialPort, TypeMoq.MockBehavior.Loose, true, '/dev/test');
 const mockTransform = TypeMoq.Mock.ofType<Transform>(SerialPort.parsers.Readline);
 mockSerialPort.callBase = false;
+
+const settings:SerialPortSettings = {
+    dataBits: 8,
+    stopBits: 1,
+    baudRate: 9600,
+    parity: SerialParity.NONE,
+    portName: "test",
+    format: SerialDataFormat.ASCII_LINES
+}
 
 interface Callback {
     (chunk: string): void
@@ -21,7 +31,7 @@ describe( 'serialEmitter', function() {
                 dataCallback = func as Callback;
             });
 
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             expect(dataCallback).to.not.be.null;
             let dataEvt: IDataEvent | unknown = null;
             emitter.onData({
@@ -40,7 +50,7 @@ describe( 'serialEmitter', function() {
             mockTransform.setup(a => a.on(TypeMoq.It.isValue<string>('data'), TypeMoq.It.isAny())).callback((str, func)=>{
                 dataCallback = func as Callback;
             });
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             let connected = false;
             emitter.onStatus((status) => {
                 connected = status.connected;
@@ -62,7 +72,7 @@ describe( 'serialEmitter', function() {
                     callback(undefined);
                 })
             // verify data would be written to serial port
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             const result = await emitter.sendCommand({
                 actionId: 'test5',
                 payload: 'test6'
@@ -80,7 +90,7 @@ describe( 'serialEmitter', function() {
                     callback(new Error("failed"));
                 })
             // verify data would be written to serial port
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             const result = await emitter.sendCommand({
                 actionId: 'test5',
                 payload: 'test6'
@@ -91,14 +101,14 @@ describe( 'serialEmitter', function() {
     })
     describe('probeStatus',  function() {
         it('should be disconnected initially', async function() {
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             const status = await emitter.probeStatus();
             expect(status.connected).to.be.false;
         })
     })
     describe('probeCurrentData', async function() {
         it('should fail without cached data', async function() {
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             let error:Error|null = null;
             try {
                 await emitter.probeCurrentData();
@@ -111,7 +121,7 @@ describe( 'serialEmitter', function() {
     describe('applySettings', function() {
         it('Should set the name, id, description, and d/c threshold', async function() {
             // call apply
-            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test');
+            const emitter = new SerialEmitter(mockSerialPort.object, mockTransform.object, 'test', 'test', 'test', settings);
             const result = await emitter.applySettings({
                 name: 'test2',
                 id: 'test3',
