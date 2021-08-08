@@ -45,7 +45,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@curium.rocks/data-emitter-base": "^0.1.1-alpha.9",
+    "@curium.rocks/data-emitter-base": "^0.1.1-alpha.24",
     "serialport": "^9.2.0"
   },
   "nyc": {
