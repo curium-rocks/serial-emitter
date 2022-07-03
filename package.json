@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@curium.rocks/data-emitter-base": "^0.1.1-alpha.25",
-    "serialport": "^9.2.0"
+    "serialport": "^10.0.0"
   },
   "nyc": {
     "extension": [
